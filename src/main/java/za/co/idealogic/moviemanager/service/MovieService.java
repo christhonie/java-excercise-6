@@ -79,6 +79,16 @@ public class MovieService {
         log.debug("Request to get Movie : {}", id);
         return movieRepository.findOneWithEagerRelationships(id)
             .map(movieMapper::toDto);
+/*
+ *          ^^^^^^^^^^^^^^^^^^^^^^^^^
+ *      Alternative (long and legacy) way to code the above map function
+ *      ----------------------------------------------------------------
+ *       
+ *      Movie movie = movieRepository.findOneWithEagerRelationships(id).orElse(null);
+ *      MovieDTO movieDTO = movieMapper.toDto(movie);
+ *      return Optional.of(movieDTO);
+ */        
+
     }
 
     /**
