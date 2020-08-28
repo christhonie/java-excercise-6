@@ -33,6 +33,12 @@ Right-click the application class and select Run As -> Spring Boot Application.
 
 NOTE: Do to a wrong configuration in the POM.XML file you need to first run `mvn install` on the command line at least once before running from the IDE.
 
+## Model / Entity Relationship Diagram
+
+The application represents a Movie Management application, which are used by company to list movies available to air, schedule the movies in cinemas, track the seats in each cinema and manage the booking process, which includes reserving seats.
+
+![ERD](docs/ERD.png)
+
 ## Rest enpoints
 
 There are various APIs defined in this project. Here are examples of some of the GET operations;
