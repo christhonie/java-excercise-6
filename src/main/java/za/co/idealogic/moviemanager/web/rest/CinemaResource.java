@@ -1,11 +1,11 @@
 package za.co.idealogic.moviemanager.web.rest;
 
-import za.co.idealogic.moviemanager.service.CinemaService;
-import za.co.idealogic.moviemanager.web.rest.errors.BadRequestAlertException;
-import za.co.idealogic.moviemanager.web.rest.util.HeaderUtil;
-import za.co.idealogic.moviemanager.web.rest.util.PaginationUtil;
-import za.co.idealogic.moviemanager.web.rest.util.ResponseUtil;
-import za.co.idealogic.moviemanager.service.dto.CinemaDTO;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,15 +13,24 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import za.co.idealogic.moviemanager.service.CinemaService;
+import za.co.idealogic.moviemanager.service.dto.CinemaDTO;
+import za.co.idealogic.moviemanager.service.dto.InitializeCinemaDTO;
+import za.co.idealogic.moviemanager.web.rest.errors.BadRequestAlertException;
+import za.co.idealogic.moviemanager.web.rest.util.HeaderUtil;
+import za.co.idealogic.moviemanager.web.rest.util.PaginationUtil;
+import za.co.idealogic.moviemanager.web.rest.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link za.co.idealogic.moviemanager.domain.Cinema}.
@@ -122,4 +131,39 @@ public class CinemaResource {
         cinemaService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+    
+    /**
+     * {@code POST  /cinemas} : Create a new cinema.
+     *
+     * @param cinemaDTO the cinemaDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new cinemaDTO, or with status {@code 400 (Bad Request)} if the cinema has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/cinemas/initialize")
+    public ResponseEntity<CinemaDTO> initializeCinema(@Valid @RequestBody InitializeCinemaDTO initializeCinemaDTO) throws URISyntaxException {
+        log.debug("REST request to save Cinema : {}", initializeCinemaDTO);
+
+        CinemaDTO result = cinemaService.initialize(initializeCinemaDTO);
+        return ResponseEntity.created(new URI("/api/cinemas/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
