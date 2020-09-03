@@ -2,9 +2,6 @@ package za.co.idealogic.moviemanager.service.dto;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 public class InitializeCinemaDTO implements Serializable
 {
     private static final long serialVersionUID = -3906350449788888562L;
@@ -63,13 +60,6 @@ public class InitializeCinemaDTO implements Serializable
     public void setLongestRowCount(int longestRowCount)
     {
         this.longestRowCount = longestRowCount;
-    }
-
-
-    @Override
-    public int hashCode()
-    {
-	return 31;
     }
 
 }
