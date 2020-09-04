@@ -79,10 +79,10 @@ public class MovieService {
             List<Movie> movie = movieRepository.findByRunningTimeLessThan(lessThan);
             return movieMapper.toDto(movie);
         } else {
-            log.debug("Request to get movies by duration greaterThan null lessThan null");
-            List<Movie> movie = movieRepository.findByRunningTimeBetween(greaterThan, lessThan);
-            return movieMapper.toDto(movie);
+            //return error if both are null
+        	return null;
         }
+		
     }
     
     /**

@@ -125,14 +125,13 @@ public class MovieResource {
      * @return
      */
    
-    @GetMapping("/movies/duration/greaterthan={greaterThan}/lessthan={lessThan}")
+    @GetMapping("/movies/duration/{greaterThan}/{lessThan}")
     public ResponseEntity<List<MovieDTO>> getAllMoviesByDuration(@PathVariable Duration greaterThan, @PathVariable Duration lessThan) {
         log.debug("REST request to get a page of Movies");
         List<MovieDTO> movieDTO = movieService.findMoviesByDuration(greaterThan, lessThan);
         return ResponseEntity.ok().body(movieDTO);
     }
 
-    
     /**
      * {@code DELETE  /movies/:id} : delete the "id" movie.
      *
