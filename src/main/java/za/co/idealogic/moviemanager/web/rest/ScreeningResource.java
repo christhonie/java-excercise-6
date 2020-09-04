@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,4 +123,17 @@ public class ScreeningResource {
         screeningService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+    
+    /**
+     * {@code DELETE  /screenings/:id} : delete the "id" screening.
+     *
+     * @param id the id of the screeningDTO to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @PostMapping("/desired/screenings")
+    public ResponseEntity<List<ScreeningDTO>> getScreenings(@RequestBody ScreeningDTO desiredScreening ) {
+        log.debug("REST request to get a page of Screenings");
+        return ResponseEntity.ok().body(screeningService.findSuitableScreeningTime(desiredScreening));
+    }  
+  
 }
