@@ -56,8 +56,6 @@ public class ScreeningService {
     public ScreeningDTO save(ScreeningDTO screeningDTO) throws Exception{
         log.debug("Request to save Screening : {}", screeningDTO);
         
-        screeningDTO = schedule(screeningDTO.getMovieId(), screeningDTO.getCinemaId(), screeningDTO.getStartTime());
-        
         Screening screening = screeningMapper.toEntity(screeningDTO);
         screening = screeningRepository.save(screening);
         
@@ -72,7 +70,7 @@ public class ScreeningService {
     	Instant currrentTime = Instant.now();
     	
     	if (startTime.isAfter(currrentTime)) {
-    		Duration runningTime = movieRepository.findOneWithEagerRelationships(movieId).orElse(null).getRunningTime();
+    		Duration runningTime = movieRepository.findRunningTimeById(movieId);
         	Instant endTime = startTime.plus(runningTime.toMinutes(), ChronoUnit.MINUTES);
         	
         	screeningDTO.setMovieId(movieId);
@@ -80,7 +78,7 @@ public class ScreeningService {
         	screeningDTO.setStartTime(startTime);
         	screeningDTO.setEndTime(endTime);
         	
-        	return screeningDTO;
+        	return save(screeningDTO);
 		}
     	else {
     		throw new Exception("The start time can not be in the past");

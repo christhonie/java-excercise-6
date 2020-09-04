@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,4 +27,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("select movie from Movie movie left join fetch movie.actors where movie.id =:id")
     Optional<Movie> findOneWithEagerRelationships(@Param("id") Long id);
+    
+    Duration findRunningTimeById(Long id);
 }
