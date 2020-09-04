@@ -2,16 +2,24 @@ package za.co.idealogic.moviemanager.service.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class InitializeCinemaDTO implements Serializable
 {
     private static final long serialVersionUID = -3906350449788888562L;
 
+    @NotNull
     private Long venueId;
     
+    @NotNull
+    @Size(max = 50)
     private String cinemaName;
     
+    @NotNull
     private int numberOfRows;
     
+    @NotNull
     private int longestRowCount;
 
 

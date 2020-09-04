@@ -133,9 +133,9 @@ public class CinemaResource {
     }
     
     /**
-     * {@code POST  /cinemas} : Create a new cinema.
+     * {@code POST  /cinemas/initialize} : Create a new cinema.
      *
-     * @param cinemaDTO the cinemaDTO to create.
+     * @param initializeCinemaDTO the initializeCinemaDTO to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new cinemaDTO, or with status {@code 400 (Bad Request)} if the cinema has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */

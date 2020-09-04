@@ -119,7 +119,7 @@ public class CinemaService {
             
 	    for (int j = 0; j < initializeCinemaDTO.getLongestRowCount(); j++)
 	    { 
-		String currentSeat = seatChars + "" + allowedSeats[seatCount] +  + (j + 1);
+		String currentSeat = seatChars + "" + allowedSeats[seatCount] + (j + 1);
 		log.debug(currentSeat.toString());
 		SeatDTO seatDTO = new SeatDTO();
 		seatDTO.setNumber(currentSeat);
