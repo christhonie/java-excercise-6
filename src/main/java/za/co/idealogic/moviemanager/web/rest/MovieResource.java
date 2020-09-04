@@ -118,6 +118,20 @@ public class MovieResource {
         return ResponseUtil.wrapOrNotFound(movieDTO);
     }
 
+    @GetMapping("/movies/getName/{partial}")
+    public ResponseEntity<List<MovieDTO>> getMovie(@PathVariable String partial) {
+        log.debug("REST request to get Movie : {}", partial);
+        List<MovieDTO> movieDTO = movieService.findAllByName(partial);
+        return ResponseEntity.ok().body(movieDTO);
+    }
+    
+    @GetMapping("/movies/getName/{partial}/{sort}")
+    public ResponseEntity<List<MovieDTO>> getMovie(@PathVariable String partial, @PathVariable String sort) {
+        log.debug("REST request to get Movie : {}", partial);
+        List<MovieDTO> movieDTO = movieService.findAllByName(partial, sort);
+        return ResponseEntity.ok().body(movieDTO);
+    }
+
     /**
      * getAllMoviesByDuration will return a range of movies by a filtered runningTime.
      * @param greaterThan this value is the lower limit of runningTime, it is optional and is null by default.

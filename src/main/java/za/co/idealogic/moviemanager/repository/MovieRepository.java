@@ -28,12 +28,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("select movie from Movie movie left join fetch movie.actors where movie.id =:id")
     Optional<Movie> findOneWithEagerRelationships(@Param("id") Long id);
 
-	//List<Movie> findByRunningTimeGreaterThanAndfindByRunningTimeLessThan(Long greaterThan, Long lessThan);
-
 	List<Movie> findByRunningTimeBetweenOrderByRunningTimeAsc(Duration greaterThan, Duration lessThan);
 	
 	List<Movie> findByRunningTimeGreaterThanOrderByRunningTimeAsc(Duration greaterThan);
 
 	List<Movie> findByRunningTimeLessThanOrderByRunningTimeAsc(Duration lessThan);
+
+	List<Movie> findByNameContainingOrderByNameDesc(String partial);
+    
+	List<Movie> findByNameContainingOrderByNameAsc(String partial);
 
 }

@@ -103,7 +103,7 @@ public class MovieService {
     public Optional<MovieDTO> findOne(Long id) {
         log.debug("Request to get Movie : {}", id);
         return movieRepository.findOneWithEagerRelationships(id)
-            .map(movieMapper::toDto);
+            .map(movieMapper::toDto);}
 /*
  *          ^^^^^^^^^^^^^^^^^^^^^^^^^
  *      Alternative (long and legacy) way to code the above map function
@@ -113,8 +113,33 @@ public class MovieService {
  *      MovieDTO movieDTO = movieMapper.toDto(movie);
  *      return Optional.of(movieDTO);
  */        
+    @Transactional(readOnly = true)
+    public List<MovieDTO> findAllByName(String partial, String sort) {
+    	List<Movie> movie;
+    	switch(sort.toLowerCase()) {
+			case "asc" : 
+				log.debug("Request to get Movie : {}", partial);
+			    movie = movieRepository.findByNameContainingOrderByNameAsc(partial);
+			    return movieMapper.toDto(movie);
+			case "desc" :
+				log.debug("Request to get Movie : {}", partial);
+			    movie = movieRepository.findByNameContainingOrderByNameDesc(partial);
+			    return movieMapper.toDto(movie);
+			default:
+				log.debug("Request to get Movie : {}", partial);
+			    movie = movieRepository.findByNameContainingOrderByNameAsc(partial);
+			    return movieMapper.toDto(movie);	     
+    	}
 
     }
+    
+    @Transactional(readOnly = true)
+    public List<MovieDTO> findAllByName(String partial) {
+    	        log.debug("Request to get Movie : {}", partial);
+    	        List<Movie> movie = movieRepository.findByNameContainingOrderByNameAsc(partial);
+    	        return movieMapper.toDto(movie);
+    }
+  
 
     /**
      * Delete the movie by id.
