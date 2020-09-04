@@ -117,10 +117,16 @@ public class MovieResource {
         return ResponseUtil.wrapOrNotFound(movieDTO);
     }
 
-    @GetMapping("/movies/getYear/{year}/{sort}")
-    public ResponseEntity<List<MovieDTO>> getMovieAsc(@PathVariable int year,@PathVariable String sort) {
+    /**
+     * Search for a movie by year
+     * @param year that we are searching for
+     * @param sortAsc true if sorting ascending, false if descending 
+     * @return a list of movies matching the criteria
+     */
+    @GetMapping("/movies/getYear/{year}")
+    public ResponseEntity<List<MovieDTO>> getMovieAsc(@PathVariable Long year,@RequestParam(required = false) Boolean sortAsc) {
         log.debug("REST request to get Movie : {}", year);
-        List<MovieDTO> movieDTO = movieService.findAll(year, sort);
+        List<MovieDTO> movieDTO = movieService.findAll(year, sortAsc);
         return ResponseEntity.ok().body(movieDTO);
     }
 

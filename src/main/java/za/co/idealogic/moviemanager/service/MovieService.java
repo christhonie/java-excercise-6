@@ -95,25 +95,17 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public List<MovieDTO> findAll(int year, String sort) {
+    public List<MovieDTO> findAll(Long year, Boolean sortAsc) {
         List<Movie> movie;
 
-        switch (sort.toLowerCase()) {
-
-            case "asc":
-                log.debug("Request to get Movie : {}", year);
-                movie = movieRepository.findMovieByYearOrderByNameAsc(year);
-                return movieMapper.toDto(movie);
-
-            case "desc":
-                log.debug("Request to get Movie : {}", year);
-                movie = movieRepository.findMovieByYearOrderByNameDesc(year);
-                return movieMapper.toDto(movie);
-
-            default:
-                log.debug("Request to get Movie : {}", year);
-                movie = movieRepository.findMovieByYearOrderByNameAsc(year);
-                return movieMapper.toDto(movie);
+        if(sortAsc != null && sortAsc) {
+            log.debug("Request to get Movie : {}", year);
+            movie = movieRepository.findMovieByYearOrderByNameAsc(year);
+            return movieMapper.toDto(movie);
+        } else {
+            log.debug("Request to get Movie : {}", year);
+            movie = movieRepository.findMovieByYearOrderByNameDesc(year);
+            return movieMapper.toDto(movie);        	
         }
     }
 
