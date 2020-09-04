@@ -124,14 +124,6 @@ public class MovieResource {
         return ResponseEntity.ok().body(movieDTO);
     }
 
-
-
-
-
-
-
-
-
     /**
      * {@code DELETE  /movies/:id} : delete the "id" movie.
      *

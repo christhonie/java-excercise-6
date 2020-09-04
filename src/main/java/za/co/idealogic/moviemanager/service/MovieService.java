@@ -94,7 +94,6 @@ public class MovieService {
  */
     }
 
-
     @Transactional(readOnly = true)
     public List<MovieDTO> findAll(int year, String sort) {
         List<Movie> movie;
@@ -117,8 +116,6 @@ public class MovieService {
                 return movieMapper.toDto(movie);
         }
     }
-
-
 
     /**
      * Delete the movie by id.
