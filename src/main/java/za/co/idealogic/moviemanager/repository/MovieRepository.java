@@ -1,5 +1,6 @@
 package za.co.idealogic.moviemanager.repository;
 
+import za.co.idealogic.moviemanager.domain.Genre;
 import za.co.idealogic.moviemanager.domain.Movie;
 
 import org.springframework.data.domain.Page;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +28,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("select movie from Movie movie left join fetch movie.actors where movie.id =:id")
     Optional<Movie> findOneWithEagerRelationships(@Param("id") Long id);
+    
+    @Query("select movie from Movie movie left join fetch movie.genre where movie.genre like %:genre.name%")
+    List<Movie> findByGenre(@Param("genre") Genre genre, @RequestParam(required = false, defaultValue = "true") boolean sortDesc);
 }
