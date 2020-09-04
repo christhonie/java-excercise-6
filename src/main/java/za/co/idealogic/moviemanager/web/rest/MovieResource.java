@@ -133,8 +133,8 @@ public class MovieResource {
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
     
-    @GetMapping("/movies/{genre}")
-    public ResponseEntity<List<MovieDTO>> findByGenre(@PathVariable Genre genre,boolean sortDesc) {
+    @GetMapping("/movies/genre/{genre}")
+    public ResponseEntity<List<MovieDTO>> findByGenre(@PathVariable String genre, @RequestParam(required = false) Boolean sortDesc) {
         log.debug("REST request to get Movies by : {}", genre);
         List<MovieDTO> movieDTO = movieService.findByGenre(genre, sortDesc);
         return ResponseEntity.ok().body(movieDTO);

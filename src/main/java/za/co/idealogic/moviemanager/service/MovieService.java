@@ -108,16 +108,14 @@ public class MovieService {
      * Get all the movies by genre.
      * @return the list of movies.
      */
-    public List<MovieDTO> findByGenre(Genre genre, Boolean sortDesc) {
+    public List<MovieDTO> findByGenre(String genre, Boolean sortDesc) {
     	log.debug("Request to get Movies by Genre");
     	List<Movie> myList;
     	
-    	if(sortDesc) {
-    		myList = movieRepository.findByGenre(genre, sortDesc);
-    		Sort.by("movie.name").ascending();
+    	if(sortDesc != null && sortDesc) {
+    		myList = movieRepository.findByGenreNameOrderByNameDesc(genre);
     	}else {
-    		myList = movieRepository.findByGenre(genre, sortDesc);
-    		Sort.by("movie.name").descending();
+    		myList = movieRepository.findByGenreNameOrderByNameAsc(genre);
     	}
         return movieMapper.toDto(myList);
     }
