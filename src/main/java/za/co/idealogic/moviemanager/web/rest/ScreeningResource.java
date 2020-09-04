@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ public class ScreeningResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/screenings")
-    public ResponseEntity<ScreeningDTO> createScreening(@Valid @RequestBody ScreeningDTO screeningDTO) throws URISyntaxException {
+    public ResponseEntity<ScreeningDTO> createScreening(@Valid @RequestBody ScreeningDTO screeningDTO) throws URISyntaxException, Exception {
         log.debug("REST request to save Screening : {}", screeningDTO);
         if (screeningDTO.getId() != null) {
             throw new BadRequestAlertException("A new screening cannot already have an ID", ENTITY_NAME, "idexists");
@@ -60,6 +61,12 @@ public class ScreeningResource {
         return ResponseEntity.created(new URI("/api/screenings/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+    
+    @GetMapping("/screenings/schedule/{movieId}/{cinemaId}/{startTime}")
+    public ResponseEntity<ScreeningDTO> scheduleScreening(@Valid @PathVariable Long movieId, @PathVariable Long cinemaId, @PathVariable Instant startTime) throws URISyntaxException, Exception {    
+        ScreeningDTO result = screeningService.schedule(movieId, cinemaId, startTime);;
+        return ResponseEntity.ok().body(result);
     }
 
     /**
@@ -72,7 +79,7 @@ public class ScreeningResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/screenings")
-    public ResponseEntity<ScreeningDTO> updateScreening(@Valid @RequestBody ScreeningDTO screeningDTO) throws URISyntaxException {
+    public ResponseEntity<ScreeningDTO> updateScreening(@Valid @RequestBody ScreeningDTO screeningDTO) throws URISyntaxException, Exception {
         log.debug("REST request to update Screening : {}", screeningDTO);
         if (screeningDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
