@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -66,7 +67,7 @@ public class MovieService {
      */
     public Page<MovieDTO> findAllWithEagerRelationships(Pageable pageable) {
         return movieRepository.findAllWithEagerRelationships(pageable).map(movieMapper::toDto);
-    }
+}
 
     /**
      * Get one movie by id.
@@ -79,17 +80,45 @@ public class MovieService {
         log.debug("Request to get Movie : {}", id);
         return movieRepository.findOneWithEagerRelationships(id)
             .map(movieMapper::toDto);
-/*
+
+
+
+        /*
  *          ^^^^^^^^^^^^^^^^^^^^^^^^^
  *      Alternative (long and legacy) way to code the above map function
  *      ----------------------------------------------------------------
- *       
+ *
  *      Movie movie = movieRepository.findOneWithEagerRelationships(id).orElse(null);
  *      MovieDTO movieDTO = movieMapper.toDto(movie);
  *      return Optional.of(movieDTO);
- */        
-
+ */
     }
+
+
+    @Transactional(readOnly = true)
+    public List<MovieDTO> findAll(int year, String sort) {
+        List<Movie> movie;
+
+        switch (sort.toLowerCase()) {
+
+            case "asc":
+                log.debug("Request to get Movie : {}", year);
+                movie = movieRepository.findMovieByYearOrderByNameAsc(year);
+                return movieMapper.toDto(movie);
+
+            case "desc":
+                log.debug("Request to get Movie : {}", year);
+                movie = movieRepository.findMovieByYearOrderByNameDesc(year);
+                return movieMapper.toDto(movie);
+
+            default:
+                log.debug("Request to get Movie : {}", year);
+                movie = movieRepository.findMovieByYearOrderByNameAsc(year);
+                return movieMapper.toDto(movie);
+        }
+    }
+
+
 
     /**
      * Delete the movie by id.

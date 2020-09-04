@@ -17,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Path;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -115,6 +116,21 @@ public class MovieResource {
         Optional<MovieDTO> movieDTO = movieService.findOne(id);
         return ResponseUtil.wrapOrNotFound(movieDTO);
     }
+
+    @GetMapping("/movies/getYear/{year}/{sort}")
+    public ResponseEntity<List<MovieDTO>> getMovieAsc(@PathVariable int year,@PathVariable String sort) {
+        log.debug("REST request to get Movie : {}", year);
+        List<MovieDTO> movieDTO = movieService.findAll(year, sort);
+        return ResponseEntity.ok().body(movieDTO);
+    }
+
+
+
+
+
+
+
+
 
     /**
      * {@code DELETE  /movies/:id} : delete the "id" movie.
