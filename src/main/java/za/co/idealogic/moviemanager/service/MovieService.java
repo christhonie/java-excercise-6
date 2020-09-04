@@ -12,7 +12,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service Implementation for managing {@link Movie}.
@@ -58,7 +64,27 @@ public class MovieService {
             .map(movieMapper::toDto);
     }
 
-
+    @Transactional(readOnly = true)
+    public List<MovieDTO> findMoviesByDuration(Duration greaterThan, Duration lessThan) {
+        if(greaterThan != null && lessThan != null){
+            log.debug("Request to get movies by duration greaterThan not null lessThan not null");
+            List<Movie> movie = movieRepository.findByRunningTimeBetween(greaterThan, lessThan);
+            return movieMapper.toDto(movie);
+        } else if(greaterThan != null && lessThan == null){
+            log.debug("Request to get movies by duration greaterThan not null lessThan null");
+            List<Movie> movie = movieRepository.findByRunningTimeGreaterThan(greaterThan);
+            return movieMapper.toDto(movie);
+        } else if (greaterThan == null && lessThan != null){
+            log.debug("Request to get movies by duration greaterThan null lessThan not null");
+            List<Movie> movie = movieRepository.findByRunningTimeLessThan(lessThan);
+            return movieMapper.toDto(movie);
+        } else {
+            log.debug("Request to get movies by duration greaterThan null lessThan null");
+            List<Movie> movie = movieRepository.findByRunningTimeBetween(greaterThan, lessThan);
+            return movieMapper.toDto(movie);
+        }
+    }
+    
     /**
      * Get all the movies with eager load of many-to-many relationships.
      *

@@ -1,5 +1,6 @@
 package za.co.idealogic.moviemanager.web.rest;
 
+import za.co.idealogic.moviemanager.domain.Movie;
 import za.co.idealogic.moviemanager.service.MovieService;
 import za.co.idealogic.moviemanager.web.rest.errors.BadRequestAlertException;
 import za.co.idealogic.moviemanager.web.rest.util.HeaderUtil;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,6 +118,24 @@ public class MovieResource {
         return ResponseUtil.wrapOrNotFound(movieDTO);
     }
 
+    /**
+     * {@code GET  /movies} : get movies based on duration.
+     *
+     * @param pageable the pagination information.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of movies in body.
+     */
+    
+
+    
+    @GetMapping("/movies/duration/greaterthan={greaterThan}/lessthan={lessThan}")
+    public ResponseEntity<List<MovieDTO>> getAllMoviesByDuration(@PathVariable Duration greaterThan, @PathVariable Duration lessThan) {
+        log.debug("REST request to get a page of Movies");
+        List<MovieDTO> movieDTO = movieService.findMoviesByDuration(greaterThan, lessThan);
+        return ResponseEntity.ok().body(movieDTO);
+    }
+
+    
     /**
      * {@code DELETE  /movies/:id} : delete the "id" movie.
      *
