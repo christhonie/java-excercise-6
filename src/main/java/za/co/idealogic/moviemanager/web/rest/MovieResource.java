@@ -119,15 +119,12 @@ public class MovieResource {
     }
 
     /**
-     * {@code GET  /movies} : get movies based on duration.
-     *
-     * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of movies in body.
+     * getAllMoviesByDuration will return a range of movies by a filtered runningTime.
+     * @param greaterThan this value is the lower limit of runningTime.
+     * @param lessThan this value is the upper limit of runningTime.
+     * @return
      */
-    
-
-    
+   
     @GetMapping("/movies/duration/greaterthan={greaterThan}/lessthan={lessThan}")
     public ResponseEntity<List<MovieDTO>> getAllMoviesByDuration(@PathVariable Duration greaterThan, @PathVariable Duration lessThan) {
         log.debug("REST request to get a page of Movies");
