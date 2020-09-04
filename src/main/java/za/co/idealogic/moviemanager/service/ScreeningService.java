@@ -94,8 +94,8 @@ public class ScreeningService {
 		List<Screening> screenings = screeningRepository.getByCinemaName(desiredScreening.getCinemaName());
 		List<ScreeningDTO> screeningsDTO = new ArrayList();
 		for (Screening screening : screenings) {
-			if (screening.getStartTime().isAfter(desiredScreening.getStartTime().plusSeconds(7200))
-					&& screening.getStartTime().isBefore(desiredScreening.getStartTime().minusSeconds(3600))) {
+			if (screening.getStartTime().isBefore(desiredScreening.getStartTime().plusSeconds(7200))
+					&& screening.getStartTime().isAfter(desiredScreening.getStartTime().minusSeconds(3600))) {
 				screeningsDTO.add(screeningMapper.toDto(screening));
 			}
 		}
