@@ -96,7 +96,10 @@ public class ScreeningService {
 		for (Screening screening : screenings) {
 			if (screening.getStartTime().isBefore(desiredScreening.getStartTime().plusSeconds(7200))
 					&& screening.getStartTime().isAfter(desiredScreening.getStartTime().minusSeconds(3600))) {
+				if(Instant.now().minusSeconds(900).isAfter(screening.getStartTime())) { 
+				
 				screeningsDTO.add(screeningMapper.toDto(screening));
+				}
 			}
 		}
 		return screeningsDTO;
