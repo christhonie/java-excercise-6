@@ -132,8 +132,7 @@ public class MovieResource {
 		try {
 			movieDTO = movieService.findMoviesByDuration(greaterThan, lessThan);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return ResponseEntity.badRequest().build();
 		}
         return ResponseEntity.ok().body(movieDTO);
     }
