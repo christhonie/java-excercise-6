@@ -1,6 +1,7 @@
 package za.co.idealogic.moviemanager.web.rest;
 
 import za.co.idealogic.moviemanager.domain.Genre;
+import za.co.idealogic.moviemanager.domain.Movie;
 import za.co.idealogic.moviemanager.service.MovieService;
 import za.co.idealogic.moviemanager.web.rest.errors.BadRequestAlertException;
 import za.co.idealogic.moviemanager.web.rest.util.HeaderUtil;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,6 +120,39 @@ public class MovieResource {
         log.debug("REST request to get Movie : {}", id);
         Optional<MovieDTO> movieDTO = movieService.findOne(id);
         return ResponseUtil.wrapOrNotFound(movieDTO);
+    }
+
+    @GetMapping("/movies/getName/{partial}")
+    public ResponseEntity<List<MovieDTO>> getMovie(@PathVariable String partial) {
+        log.debug("REST request to get Movie : {}", partial);
+        List<MovieDTO> movieDTO = movieService.findAllByName(partial);
+        return ResponseEntity.ok().body(movieDTO);
+    }
+    
+    @GetMapping("/movies/getName/{partial}/{sort}")
+    public ResponseEntity<List<MovieDTO>> getMovie(@PathVariable String partial, @PathVariable String sort) {
+        log.debug("REST request to get Movie : {}", partial);
+        List<MovieDTO> movieDTO = movieService.findAllByName(partial, sort);
+        return ResponseEntity.ok().body(movieDTO);
+    }
+
+    /**
+     * getAllMoviesByDuration will return a range of movies by a filtered runningTime.
+     * @param greaterThan this value is the lower limit of runningTime, it is optional and is null by default.
+     * @param lessThan this value is the upper limit of runningTime, it is optional and is null by default.
+     * @return
+     */
+   
+    @GetMapping("/movies/duration")
+    public ResponseEntity<List<MovieDTO>> getAllMoviesByDuration(@RequestParam(required = false) Duration greaterThan, @RequestParam(required = false) Duration lessThan ) {
+        log.debug("REST request to get a page of Movies");
+        List<MovieDTO> movieDTO = null;
+		try {
+			movieDTO = movieService.findMoviesByDuration(greaterThan, lessThan);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
+		}
+        return ResponseEntity.ok().body(movieDTO);
     }
 
     /**

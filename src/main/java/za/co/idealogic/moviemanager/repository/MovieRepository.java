@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,4 +32,15 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     
     List<Movie> findByGenreNameOrderByNameAsc(String genre);
     List<Movie> findByGenreNameOrderByNameDesc(String genre);
+
+	  List<Movie> findByRunningTimeBetweenOrderByRunningTimeAsc(Duration greaterThan, Duration lessThan);
+	
+	  List<Movie> findByRunningTimeGreaterThanOrderByRunningTimeAsc(Duration greaterThan);
+
+	  List<Movie> findByRunningTimeLessThanOrderByRunningTimeAsc(Duration lessThan);
+
+	  List<Movie> findByNameContainingOrderByNameDesc(String partial);
+    
+	  List<Movie> findByNameContainingOrderByNameAsc(String partial);
+
 }
