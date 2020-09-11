@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Path;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -152,6 +153,19 @@ public class MovieResource {
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
+        return ResponseEntity.ok().body(movieDTO);
+    }
+
+    /**
+     * Search for a movie by year
+     * @param year that we are searching for
+     * @param sortAsc true if sorting ascending, false if descending 
+     * @return a list of movies matching the criteria
+     */
+    @GetMapping("/movies/getYear/{year}")
+    public ResponseEntity<List<MovieDTO>> getMovieAsc(@PathVariable Long year,@RequestParam(required = false) Boolean sortAsc) {
+        log.debug("REST request to get Movie : {}", year);
+        List<MovieDTO> movieDTO = movieService.findAll(year, sortAsc);
         return ResponseEntity.ok().body(movieDTO);
     }
 

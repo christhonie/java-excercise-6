@@ -1,6 +1,5 @@
 package za.co.idealogic.moviemanager.service;
 
-import za.co.idealogic.moviemanager.domain.Genre;
 import za.co.idealogic.moviemanager.domain.Movie;
 import za.co.idealogic.moviemanager.repository.MovieRepository;
 import za.co.idealogic.moviemanager.service.dto.MovieDTO;
@@ -10,17 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Service Implementation for managing {@link Movie}.
@@ -93,7 +87,7 @@ public class MovieService {
      */
     public Page<MovieDTO> findAllWithEagerRelationships(Pageable pageable) {
         return movieRepository.findAllWithEagerRelationships(pageable).map(movieMapper::toDto);
-    }
+}
 
     /**
      * Get one movie by id.
@@ -105,16 +99,19 @@ public class MovieService {
     public Optional<MovieDTO> findOne(Long id) {
         log.debug("Request to get Movie : {}", id);
         return movieRepository.findOneWithEagerRelationships(id)
-            .map(movieMapper::toDto);}
+            .map(movieMapper::toDto);
+    }
+
 /*
  *          ^^^^^^^^^^^^^^^^^^^^^^^^^
  *      Alternative (long and legacy) way to code the above map function
  *      ----------------------------------------------------------------
- *       
+ *
  *      Movie movie = movieRepository.findOneWithEagerRelationships(id).orElse(null);
  *      MovieDTO movieDTO = movieMapper.toDto(movie);
  *      return Optional.of(movieDTO);
- */        
+ */
+
     @Transactional(readOnly = true)
     public List<MovieDTO> findAllByName(String partial, String sort) {
     	List<Movie> movie;
@@ -132,7 +129,21 @@ public class MovieService {
 			    movie = movieRepository.findByNameContainingOrderByNameAsc(partial);
 			    return movieMapper.toDto(movie);	     
     	}
+    }
 
+    @Transactional(readOnly = true)
+    public List<MovieDTO> findAll(Long year, Boolean sortAsc) {
+        List<Movie> movie;
+
+        if(sortAsc != null && sortAsc) {
+            log.debug("Request to get Movie : {}", year);
+            movie = movieRepository.findMovieByYearOrderByNameAsc(year);
+            return movieMapper.toDto(movie);
+        } else {
+            log.debug("Request to get Movie : {}", year);
+            movie = movieRepository.findMovieByYearOrderByNameDesc(year);
+            return movieMapper.toDto(movie);        	
+        }
     }
     
     @Transactional(readOnly = true)
@@ -141,7 +152,6 @@ public class MovieService {
     	        List<Movie> movie = movieRepository.findByNameContainingOrderByNameAsc(partial);
     	        return movieMapper.toDto(movie);
     }
-  
 
     /**
      * Delete the movie by id.
