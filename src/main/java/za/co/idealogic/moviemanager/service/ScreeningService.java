@@ -53,7 +53,7 @@ public class ScreeningService {
      * @param screeningDTO the entity to save.
      * @return the persisted entity.
      */
-    public ScreeningDTO save(ScreeningDTO screeningDTO) throws Exception{
+    public ScreeningDTO save(ScreeningDTO screeningDTO) {
         log.debug("Request to save Screening : {}", screeningDTO);
         
         Screening screening = screeningMapper.toEntity(screeningDTO);
@@ -62,6 +62,7 @@ public class ScreeningService {
         return screeningMapper.toDto(screening);
     }
 
+    
     public ScreeningDTO schedule(Long movieId, Long cinemaId, Instant startTime) throws Exception{
     	log.debug("Request to scehdule - MovieId: {} CinemaId: {} StartTime: {}", movieId, cinemaId, startTime);
     	

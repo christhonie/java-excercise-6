@@ -52,7 +52,7 @@ public class ScreeningResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/screenings")
-    public ResponseEntity<ScreeningDTO> createScreening(@Valid @RequestBody ScreeningDTO screeningDTO) throws URISyntaxException, Exception {
+    public ResponseEntity<ScreeningDTO> createScreening(@Valid @RequestBody ScreeningDTO screeningDTO) throws URISyntaxException {
         log.debug("REST request to save Screening : {}", screeningDTO);
         if (screeningDTO.getId() != null) {
             throw new BadRequestAlertException("A new screening cannot already have an ID", ENTITY_NAME, "idexists");
@@ -64,8 +64,15 @@ public class ScreeningResource {
     }
     
     @GetMapping("/screenings/schedule/{movieId}/{cinemaId}/{startTime}")
-    public ResponseEntity<ScreeningDTO> scheduleScreening(@Valid @PathVariable Long movieId, @PathVariable Long cinemaId, @PathVariable Instant startTime) throws URISyntaxException, Exception {    
-        ScreeningDTO result = screeningService.schedule(movieId, cinemaId, startTime);;
+    public ResponseEntity<ScreeningDTO> scheduleScreening(@Valid @PathVariable Long movieId, @PathVariable Long cinemaId, @PathVariable Instant startTime) throws URISyntaxException {    
+        ScreeningDTO result = null;
+        
+		try {
+			result = screeningService.schedule(movieId, cinemaId, startTime);
+		} catch (Exception e) {
+			e.printStackTrace();
+		};
+		
         return ResponseEntity.ok().body(result);
     }
 
