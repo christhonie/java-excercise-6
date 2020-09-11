@@ -1,6 +1,5 @@
 package za.co.idealogic.moviemanager.service;
 
-import za.co.idealogic.moviemanager.domain.Genre;
 import za.co.idealogic.moviemanager.domain.Movie;
 import za.co.idealogic.moviemanager.repository.MovieRepository;
 import za.co.idealogic.moviemanager.service.dto.MovieDTO;
@@ -10,17 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Service Implementation for managing {@link Movie}.
@@ -135,6 +129,7 @@ public class MovieService {
 			    movie = movieRepository.findByNameContainingOrderByNameAsc(partial);
 			    return movieMapper.toDto(movie);	     
     	}
+    }
 
     @Transactional(readOnly = true)
     public List<MovieDTO> findAll(Long year, Boolean sortAsc) {
