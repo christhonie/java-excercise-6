@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +62,28 @@ public class ScreeningResource {
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+    
+    /**
+     * {@code POST  /screenings/{movieId}/{cinemaId}/{startTime}} : Schedules a new screening 
+     * 
+     * @param movieId
+     * @param cinemaId
+     * @param startTime
+     * @return
+     * @throws URISyntaxException
+     */
+    @GetMapping("/screenings/schedule/{movieId}/{cinemaId}/{startTime}")
+    public ResponseEntity<ScreeningDTO> scheduleScreening(@Valid @PathVariable Long movieId, @PathVariable Long cinemaId, @PathVariable Instant startTime) throws URISyntaxException {    
+        ScreeningDTO result = null;
+        
+		try {
+			result = screeningService.schedule(movieId, cinemaId, startTime);
+		} catch (Exception e) {
+			e.printStackTrace();
+		};
+		
+        return ResponseEntity.ok().body(result);
+    }
 
     /**
      * {@code PUT  /screenings} : Updates an existing screening.
@@ -72,7 +95,7 @@ public class ScreeningResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/screenings")
-    public ResponseEntity<ScreeningDTO> updateScreening(@Valid @RequestBody ScreeningDTO screeningDTO) throws URISyntaxException {
+    public ResponseEntity<ScreeningDTO> updateScreening(@Valid @RequestBody ScreeningDTO screeningDTO) throws URISyntaxException, Exception {
         log.debug("REST request to update Screening : {}", screeningDTO);
         if (screeningDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

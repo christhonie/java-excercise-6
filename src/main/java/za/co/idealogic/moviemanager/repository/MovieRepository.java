@@ -43,4 +43,5 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findByNameContainingOrderByNameDesc(String partial);
     List<Movie> findByNameContainingOrderByNameAsc(String partial);
 
+    Duration findRunningTimeById(Long id);
 }
