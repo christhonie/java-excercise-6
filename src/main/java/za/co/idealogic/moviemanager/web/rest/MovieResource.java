@@ -120,15 +120,21 @@ public class MovieResource {
 
     /**
      * getAllMoviesByDuration will return a range of movies by a filtered runningTime.
-     * @param greaterThan this value is the lower limit of runningTime.
-     * @param lessThan this value is the upper limit of runningTime.
+     * @param greaterThan this value is the lower limit of runningTime, it is optional and is null by default.
+     * @param lessThan this value is the upper limit of runningTime, it is optional and is null by default.
      * @return
      */
    
-    @GetMapping("/movies/duration/{greaterThan}/{lessThan}")
-    public ResponseEntity<List<MovieDTO>> getAllMoviesByDuration(@PathVariable Duration greaterThan, @PathVariable Duration lessThan) {
+    @GetMapping("/movies/duration")
+    public ResponseEntity<List<MovieDTO>> getAllMoviesByDuration(@RequestParam(required = false) Duration greaterThan, @RequestParam(required = false) Duration lessThan ) {
         log.debug("REST request to get a page of Movies");
-        List<MovieDTO> movieDTO = movieService.findMoviesByDuration(greaterThan, lessThan);
+        List<MovieDTO> movieDTO = null;
+		try {
+			movieDTO = movieService.findMoviesByDuration(greaterThan, lessThan);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return ResponseEntity.ok().body(movieDTO);
     }
 

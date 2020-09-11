@@ -30,12 +30,10 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
 	//List<Movie> findByRunningTimeGreaterThanAndfindByRunningTimeLessThan(Long greaterThan, Long lessThan);
 
-	List<Movie> findByRunningTimeBetween(Duration greaterThan, Duration lessThan);
+	List<Movie> findByRunningTimeBetweenOrderByRunningTimeAsc(Duration greaterThan, Duration lessThan);
 	
-	List<Movie> findByRunningTimeBetweenOrderByRunningTimeDesc();
-	
-	List<Movie> findByRunningTimeGreaterThan(Duration greaterThan);
+	List<Movie> findByRunningTimeGreaterThanOrderByRunningTimeAsc(Duration greaterThan);
 
-	List<Movie> findByRunningTimeLessThan(Duration lessThan);
+	List<Movie> findByRunningTimeLessThanOrderByRunningTimeAsc(Duration lessThan);
 
 }

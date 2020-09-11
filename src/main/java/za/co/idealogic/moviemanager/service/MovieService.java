@@ -65,22 +65,21 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public List<MovieDTO> findMoviesByDuration(Duration greaterThan, Duration lessThan) {
+    public List<MovieDTO> findMoviesByDuration(Duration greaterThan, Duration lessThan) throws Exception{
         if(greaterThan != null && lessThan != null){
-            log.debug("Request to get movies by duration greaterThan not null lessThan not null");
-            List<Movie> movie = movieRepository.findByRunningTimeBetween(greaterThan, lessThan);
+            log.debug("Request to get movies by duration where both greaterThan and lessThan are not null");
+            List<Movie> movie = movieRepository.findByRunningTimeBetweenOrderByRunningTimeAsc(greaterThan, lessThan);
             return movieMapper.toDto(movie);
         } else if(greaterThan != null && lessThan == null){
-            log.debug("Request to get movies by duration greaterThan not null lessThan null");
-            List<Movie> movie = movieRepository.findByRunningTimeGreaterThan(greaterThan);
+            log.debug("Request to get movies by duration where greaterThan is not null and lessThan is null");
+            List<Movie> movie = movieRepository.findByRunningTimeGreaterThanOrderByRunningTimeAsc(greaterThan);
             return movieMapper.toDto(movie);
         } else if (greaterThan == null && lessThan != null){
-            log.debug("Request to get movies by duration greaterThan null lessThan not null");
-            List<Movie> movie = movieRepository.findByRunningTimeLessThan(lessThan);
+            log.debug("Request to get movies by duration where greaterThan is null and lessThan is not null");
+            List<Movie> movie = movieRepository.findByRunningTimeLessThanOrderByRunningTimeAsc(lessThan);
             return movieMapper.toDto(movie);
         } else {
-            //return error if both are null
-        	return null;
+            throw new Exception("Both greaterThan and lessThan durations cannot be null.");
         }
 		
     }
