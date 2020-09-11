@@ -1,5 +1,6 @@
 package za.co.idealogic.moviemanager.service;
 
+import za.co.idealogic.moviemanager.domain.Genre;
 import za.co.idealogic.moviemanager.domain.Movie;
 import za.co.idealogic.moviemanager.repository.MovieRepository;
 import za.co.idealogic.moviemanager.service.dto.MovieDTO;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -149,5 +151,21 @@ public class MovieService {
     public void delete(Long id) {
         log.debug("Request to delete Movie : {}", id);
         movieRepository.deleteById(id);
+    }
+    
+    /**
+     * Get all the movies by genre.
+     * @return the list of movies.
+     */
+    public List<MovieDTO> findByGenre(String genre, Boolean sortDesc) {
+    	log.debug("Request to get Movies by Genre");
+    	List<Movie> myList;
+    	
+    	if(sortDesc != null && sortDesc) {
+    		myList = movieRepository.findByGenreNameOrderByNameDesc(genre);
+    	}else {
+    		myList = movieRepository.findByGenreNameOrderByNameAsc(genre);
+    	}
+        return movieMapper.toDto(myList);
     }
 }

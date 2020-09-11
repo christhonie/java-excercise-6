@@ -1,5 +1,6 @@
 package za.co.idealogic.moviemanager.web.rest;
 
+import za.co.idealogic.moviemanager.domain.Genre;
 import za.co.idealogic.moviemanager.domain.Movie;
 import za.co.idealogic.moviemanager.service.MovieService;
 import za.co.idealogic.moviemanager.web.rest.errors.BadRequestAlertException;
@@ -8,11 +9,14 @@ import za.co.idealogic.moviemanager.web.rest.util.PaginationUtil;
 import za.co.idealogic.moviemanager.web.rest.util.ResponseUtil;
 import za.co.idealogic.moviemanager.service.dto.MovieDTO;
 
+import org.h2.command.dml.SelectOrderBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
@@ -163,4 +167,12 @@ public class MovieResource {
         movieService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+    
+    @GetMapping("/movies/genre/{genre}")
+    public ResponseEntity<List<MovieDTO>> findByGenre(@PathVariable String genre, @RequestParam(required = false) Boolean sortDesc) {
+        log.debug("REST request to get Movies by : {}", genre);
+        List<MovieDTO> movieDTO = movieService.findByGenre(genre, sortDesc);
+        return ResponseEntity.ok().body(movieDTO);
+       }
+        
 }
