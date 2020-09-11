@@ -63,6 +63,15 @@ public class ScreeningService {
     }
 
     
+    /**
+     * Schedules the endTime for the Screening before a screening is saved
+     * 
+     * @param movieId
+     * @param cinemaId
+     * @param startTime
+     * @return
+     * @throws Exception
+     */
     public ScreeningDTO schedule(Long movieId, Long cinemaId, Instant startTime) throws Exception{
     	log.debug("Request to scehdule - MovieId: {} CinemaId: {} StartTime: {}", movieId, cinemaId, startTime);
     	

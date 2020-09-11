@@ -63,6 +63,15 @@ public class ScreeningResource {
             .body(result);
     }
     
+    /**
+     * {@code POST  /screenings/{movieId}/{cinemaId}/{startTime}} : Schedules a new screening 
+     * 
+     * @param movieId
+     * @param cinemaId
+     * @param startTime
+     * @return
+     * @throws URISyntaxException
+     */
     @GetMapping("/screenings/schedule/{movieId}/{cinemaId}/{startTime}")
     public ResponseEntity<ScreeningDTO> scheduleScreening(@Valid @PathVariable Long movieId, @PathVariable Long cinemaId, @PathVariable Instant startTime) throws URISyntaxException {    
         ScreeningDTO result = null;
