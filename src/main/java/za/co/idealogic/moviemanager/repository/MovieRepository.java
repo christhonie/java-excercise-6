@@ -1,5 +1,6 @@
 package za.co.idealogic.moviemanager.repository;
 
+import za.co.idealogic.moviemanager.domain.Genre;
 import za.co.idealogic.moviemanager.domain.Movie;
 
 import org.springframework.data.domain.Page;
@@ -7,7 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +32,15 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     List<Movie> findMovieByYearOrderByNameDesc(Long year);
     List<Movie> findMovieByYearOrderByNameAsc(Long year);
+    
+    List<Movie> findByGenreNameOrderByNameAsc(String genre);
+    List<Movie> findByGenreNameOrderByNameDesc(String genre);
 
-    //@Query("select movie from Movie movie left join fetch movie.actors where movie.year=:year order by movie.name desc")
-    //List<Movie> findMovieByYearOrderByName(@Param("year") int year);
+	  List<Movie> findByRunningTimeBetweenOrderByRunningTimeAsc(Duration greaterThan, Duration lessThan);
+	  List<Movie> findByRunningTimeGreaterThanOrderByRunningTimeAsc(Duration greaterThan);
+    List<Movie> findByRunningTimeLessThanOrderByRunningTimeAsc(Duration lessThan);
+
+    List<Movie> findByNameContainingOrderByNameDesc(String partial);
+    List<Movie> findByNameContainingOrderByNameAsc(String partial);
+
 }
