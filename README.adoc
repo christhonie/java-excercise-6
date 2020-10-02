@@ -1,4 +1,4 @@
-= Java Exercise 6
+= Java Exercise 6 - Version 1.0.2
 
 In this excercise we start with a new, more complex project. It is a Spring Boot Web Service application using Spring Web, Spring Data, JPA and Hibernate.
 
