@@ -31,7 +31,7 @@
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <argLine>-Djava.security.egd=file:/dev/./urandom -Xmx256m</argLine>
+        <argLine>-Djava.security.egd=file:/dev/./urandom</argLine>
 		<!-- automatically run annotation processors within the incremental compilation -->
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
         <run.addResources>false</run.addResources>
