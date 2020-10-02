@@ -2,15 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.3.1.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>za.co.idealogic</groupId>
 	<artifactId>java-exercise-6</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
+
 	<name>Java Exercise 6 - Movie Manager</name>
 	<description>Java Training Series - First version of Movie Manager</description>
 
@@ -24,6 +27,7 @@
         <hibernate.version>5.4.15.Final</hibernate.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+        <gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -186,6 +190,50 @@
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
+				<plugin>
+					<groupId>com.amashchenko.maven.plugin</groupId>
+					<artifactId>gitflow-maven-plugin</artifactId>
+					<version>${gitflow-maven-plugin.version}</version>
+					<configuration>
+						<!-- Whether to print commands output into the console. -->
+						<verbose>false</verbose>
+						<!-- Whether to fetch remote branch and compare it with the local one. -->
+						<fetchRemote>true</fetchRemote>
+						<!-- Whether to call Maven install goal during the mojo execution. -->
+						<installProject>true</installProject>
+						<!-- Whether to push to the remote for release/feature/hotfix start -->
+						<pushRemote>true</pushRemote>
+						<!-- Whether to skip changing project version. -->
+						<skipFeatureVersion>true</skipFeatureVersion>
+
+						<!-- Git flow configuration. -->
+						<gitFlowConfig>
+							<productionBranch>master</productionBranch>
+							<developmentBranch>develop</developmentBranch>
+							<featureBranchPrefix>feature/</featureBranchPrefix>
+							<releaseBranchPrefix>release/</releaseBranchPrefix>
+							<hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
+							<supportBranchPrefix>support/</supportBranchPrefix>
+							<versionTagPrefix>v</versionTagPrefix>
+							<origin>origin</origin>
+						</gitFlowConfig>
+
+						<!-- Git commit messages. -->
+						<commitMessages>
+							<featureStartMessage>Feature start. Set feature version.</featureStartMessage>
+							<featureFinishMessage>Feature finished. Development version updated.</featureFinishMessage>
+
+							<hotfixStartMessage>Hotfix start. Set hotfix version to @{version}.</hotfixStartMessage>
+							<hotfixFinishMessage>Hotfix now finished. Development version updated to @{version}.</hotfixFinishMessage>
+
+							<releaseStartMessage>Release start. Set release version to @{version}.</releaseStartMessage>
+							<releaseFinishMessage>Release now finished. Development version incremented to @{version}.</releaseFinishMessage>
+
+							<tagHotfixMessage>Tag hotfix @{version}</tagHotfixMessage>
+							<tagReleaseMessage>Tag release @{version}</tagReleaseMessage>
+						</commitMessages>
+					</configuration>
+				</plugin>
             </plugins>
         </pluginManagement>
 	</build>
