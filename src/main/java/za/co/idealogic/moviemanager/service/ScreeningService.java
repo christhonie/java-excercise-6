@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -30,9 +31,9 @@ import java.util.Optional;
 @Transactional
 public class ScreeningService {
 
-    private final Logger log = LoggerFactory.getLogger(ScreeningService.class);
+	private final Logger log = LoggerFactory.getLogger(ScreeningService.class);
 
-    private final ScreeningRepository screeningRepository;
+	private final ScreeningRepository screeningRepository;
 
     private final ScreeningMapper screeningMapper;
     
@@ -42,10 +43,10 @@ public class ScreeningService {
     @Autowired
     CinemaRepository cinemaRepository;
 
-    public ScreeningService(ScreeningRepository screeningRepository, ScreeningMapper screeningMapper) {
-        this.screeningRepository = screeningRepository;
-        this.screeningMapper = screeningMapper;
-    }
+	public ScreeningService(ScreeningRepository screeningRepository, ScreeningMapper screeningMapper) {
+		this.screeningRepository = screeningRepository;
+		this.screeningMapper = screeningMapper;
+	}
 
     /**
      * Save a screening.
@@ -108,27 +109,49 @@ public class ScreeningService {
             .map(screeningMapper::toDto);
     }
 
+	/**
+	 * Get one screening by id.
+	 *
+	 * @param id the id of the entity.
+	 * @return the entity.
+	 */
+	@Transactional(readOnly = true)
+	public Optional<ScreeningDTO> findOne(Long id) {
+		log.debug("Request to get Screening : {}", id);
+		return screeningRepository.findById(id).map(screeningMapper::toDto);
+	}
 
-    /**
-     * Get one screening by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
-    @Transactional(readOnly = true)
-    public Optional<ScreeningDTO> findOne(Long id) {
-        log.debug("Request to get Screening : {}", id);
-        return screeningRepository.findById(id)
-            .map(screeningMapper::toDto);
-    }
+	/**
+	 * Delete the screening by id.
+	 *
+	 * @param id the id of the entity.
+	 */
+	public void delete(Long id) {
+		log.debug("Request to delete Screening : {}", id);
+		screeningRepository.deleteById(id);
+	}
 
-    /**
-     * Delete the screening by id.
-     *
-     * @param id the id of the entity.
-     */
-    public void delete(Long id) {
-        log.debug("Request to delete Screening : {}", id);
-        screeningRepository.deleteById(id);
-    }
+	/**
+	 * Get screenings around selected time.
+	 *
+	 * @param id the id of the entity.
+	 * @return the entity.
+	 */
+	@Transactional(readOnly = true)
+	public List<ScreeningDTO> findSuitableScreeningTime(ScreeningDTO desiredScreening) {
+
+		List<Screening> screenings = screeningRepository.getByCinemaName(desiredScreening.getCinemaName());
+		List<ScreeningDTO> screeningsDTO = new ArrayList();
+		for (Screening screening : screenings) {
+			if (screening.getStartTime().isBefore(desiredScreening.getStartTime().plusSeconds(7200))
+					&& screening.getStartTime().isAfter(desiredScreening.getStartTime().minusSeconds(3600))) {
+				if(Instant.now().minusSeconds(900).isAfter(screening.getStartTime())) { 
+				
+				screeningsDTO.add(screeningMapper.toDto(screening));
+				}
+			}
+		}
+		return screeningsDTO;
+	}
+
 }
