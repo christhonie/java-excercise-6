@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -58,7 +60,26 @@ public class MovieService {
             .map(movieMapper::toDto);
     }
 
-
+    @Transactional(readOnly = true)
+    public List<MovieDTO> findMoviesByDuration(Duration greaterThan, Duration lessThan) throws Exception{
+        if(greaterThan != null && lessThan != null){
+            log.debug("Request to get movies by duration where both greaterThan and lessThan are not null");
+            List<Movie> movie = movieRepository.findByRunningTimeBetweenOrderByRunningTimeAsc(greaterThan, lessThan);
+            return movieMapper.toDto(movie);
+        } else if(greaterThan != null && lessThan == null){
+            log.debug("Request to get movies by duration where greaterThan is not null and lessThan is null");
+            List<Movie> movie = movieRepository.findByRunningTimeGreaterThanOrderByRunningTimeAsc(greaterThan);
+            return movieMapper.toDto(movie);
+        } else if (greaterThan == null && lessThan != null){
+            log.debug("Request to get movies by duration where greaterThan is null and lessThan is not null");
+            List<Movie> movie = movieRepository.findByRunningTimeLessThanOrderByRunningTimeAsc(lessThan);
+            return movieMapper.toDto(movie);
+        } else {
+            throw new Exception("Both greaterThan and lessThan durations cannot be null.");
+        }
+		
+    }
+    
     /**
      * Get all the movies with eager load of many-to-many relationships.
      *
@@ -66,7 +87,7 @@ public class MovieService {
      */
     public Page<MovieDTO> findAllWithEagerRelationships(Pageable pageable) {
         return movieRepository.findAllWithEagerRelationships(pageable).map(movieMapper::toDto);
-    }
+}
 
     /**
      * Get one movie by id.
@@ -79,16 +100,57 @@ public class MovieService {
         log.debug("Request to get Movie : {}", id);
         return movieRepository.findOneWithEagerRelationships(id)
             .map(movieMapper::toDto);
+    }
+
 /*
  *          ^^^^^^^^^^^^^^^^^^^^^^^^^
  *      Alternative (long and legacy) way to code the above map function
  *      ----------------------------------------------------------------
- *       
+ *
  *      Movie movie = movieRepository.findOneWithEagerRelationships(id).orElse(null);
  *      MovieDTO movieDTO = movieMapper.toDto(movie);
  *      return Optional.of(movieDTO);
- */        
+ */
 
+    @Transactional(readOnly = true)
+    public List<MovieDTO> findAllByName(String partial, String sort) {
+    	List<Movie> movie;
+    	switch(sort.toLowerCase()) {
+			case "asc" : 
+				log.debug("Request to get Movie : {}", partial);
+			    movie = movieRepository.findByNameContainingOrderByNameAsc(partial);
+			    return movieMapper.toDto(movie);
+			case "desc" :
+				log.debug("Request to get Movie : {}", partial);
+			    movie = movieRepository.findByNameContainingOrderByNameDesc(partial);
+			    return movieMapper.toDto(movie);
+			default:
+				log.debug("Request to get Movie : {}", partial);
+			    movie = movieRepository.findByNameContainingOrderByNameAsc(partial);
+			    return movieMapper.toDto(movie);	     
+    	}
+    }
+
+    @Transactional(readOnly = true)
+    public List<MovieDTO> findAll(Long year, Boolean sortAsc) {
+        List<Movie> movie;
+
+        if(sortAsc != null && sortAsc) {
+            log.debug("Request to get Movie : {}", year);
+            movie = movieRepository.findMovieByYearOrderByNameAsc(year);
+            return movieMapper.toDto(movie);
+        } else {
+            log.debug("Request to get Movie : {}", year);
+            movie = movieRepository.findMovieByYearOrderByNameDesc(year);
+            return movieMapper.toDto(movie);        	
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public List<MovieDTO> findAllByName(String partial) {
+    	        log.debug("Request to get Movie : {}", partial);
+    	        List<Movie> movie = movieRepository.findByNameContainingOrderByNameAsc(partial);
+    	        return movieMapper.toDto(movie);
     }
 
     /**
@@ -99,5 +161,21 @@ public class MovieService {
     public void delete(Long id) {
         log.debug("Request to delete Movie : {}", id);
         movieRepository.deleteById(id);
+    }
+    
+    /**
+     * Get all the movies by genre.
+     * @return the list of movies.
+     */
+    public List<MovieDTO> findByGenre(String genre, Boolean sortDesc) {
+    	log.debug("Request to get Movies by Genre");
+    	List<Movie> myList;
+    	
+    	if(sortDesc != null && sortDesc) {
+    		myList = movieRepository.findByGenreNameOrderByNameDesc(genre);
+    	}else {
+    		myList = movieRepository.findByGenreNameOrderByNameAsc(genre);
+    	}
+        return movieMapper.toDto(myList);
     }
 }
