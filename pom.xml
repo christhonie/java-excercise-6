@@ -12,7 +12,7 @@
 
 	<groupId>za.co.idealogic</groupId>
 	<artifactId>java-exercise-6</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
 
 	<name>Java Exercise 6 - Movie Manager</name>
 	<description>Java Training Series - First version of Movie Manager</description>
