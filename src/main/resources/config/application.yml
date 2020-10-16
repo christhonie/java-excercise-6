@@ -94,3 +94,11 @@ server:
     session:
       cookie:
         http-only: true
+
+swagger:
+  title: Movie Manager API
+  description: Back-end server API for the Movie Manager project by Christhonie Geldenhuys
+  version: ${project.version}
+  contact-name: Christhonie Geldenhuys
+  contact-email: development@idealogic.co.za
+  use-default-response-messages: true

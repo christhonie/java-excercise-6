@@ -37,6 +37,7 @@
 	<logger name="org.springframework.web" level="WARN"/>
 	<logger name="org.springframework.cache" level="WARN"/>
 	<logger name="org.xnio" level="WARN"/>
+	<logger name="springfox" level="WARN"/>
 	<logger name="sun.rmi" level="WARN"/>
 	<logger name="sun.net.www.protocol.http" level="WARN"/>
 	<logger name="liquibase" level="WARN"/>

@@ -1,5 +1,6 @@
 package za.co.idealogic.moviemanager;
 
+import za.co.idealogic.moviemanager.config.properties.SwaggerProperties;
 import za.co.idealogic.moviemanager.util.DefaultProfileUtil;
 import za.co.idealogic.moviemanager.util.ProfileConstants;
 
@@ -19,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @SpringBootApplication
-@EnableConfigurationProperties({LiquibaseProperties.class})
+@EnableConfigurationProperties({LiquibaseProperties.class, SwaggerProperties.class})
 public class MovieManagerApp {
 
     private static final Logger log = LoggerFactory.getLogger(MovieManagerApp.class);
@@ -74,19 +75,54 @@ public class MovieManagerApp {
         } catch (UnknownHostException e) {
             log.warn("The host name could not be determined, using `localhost` as fallback");
         }
-        log.info("\n----------------------------------------------------------\n\t" +
-                "Application '{}' is running! Access URLs:\n\t" +
-                "Local: \t\t{}://localhost:{}{}\n\t" +
-                "External: \t{}://{}:{}{}\n\t" +
-                "Profile(s): \t{}\n----------------------------------------------------------",
-            env.getProperty("spring.application.name"),
-            protocol,
-            serverPort,
-            contextPath,
-            protocol,
-            hostAddress,
-            serverPort,
-            contextPath,
-            env.getActiveProfiles());
+        Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
+        if (activeProfiles.contains(ProfileConstants.SPRING_PROFILE_SWAGGER)) {
+	        log.info("\n----------------------------------------------------------\n\t" +
+	                "Application '{}' is running! Access URLs:\n\t" +
+	                "Local: \t\t{}://localhost:{}{}\n\t" +
+	                "External: \t{}://{}:{}{}\n\t" +
+	                "Swagger UI: \t{}://localhost:{}{}swagger-ui/\n\t" +
+	                "Swagger JSON: \t{}://localhost:{}{}v2/api-docs\n\t" +
+	                "Profile(s): \t{}\n----------------------------------------------------------",
+	            env.getProperty("spring.application.name"),
+	            //Local
+	            protocol,
+	            serverPort,
+	            contextPath,
+	            //External
+	            protocol,
+	            hostAddress,
+	            serverPort,
+	            contextPath,
+	            //Swagger UI
+	            protocol,
+	            serverPort,
+	            contextPath,
+	            //Swagger JSON
+	            protocol,
+	            serverPort,
+	            contextPath,
+	            //Profile
+	            env.getActiveProfiles());
+        } else {
+	        log.info("\n----------------------------------------------------------\n\t" +
+	                "Application '{}' is running! Access URLs:\n\t" +
+	                "Local: \t\t{}://localhost:{}{}\n\t" +
+	                "External: \t{}://{}:{}{}\n\t" +
+	                "Profile(s): \t{}\n----------------------------------------------------------",
+	            env.getProperty("spring.application.name"),
+	            //Local
+	            protocol,
+	            serverPort,
+	            contextPath,
+	            //External
+	            protocol,
+	            hostAddress,
+	            serverPort,
+	            contextPath,
+	            //Profile
+	            env.getActiveProfiles());
+
+        }
     }
 }

@@ -14,4 +14,6 @@ public interface ProfileConstants {
     /** Spring profile used when deploying to Kubernetes and OpenShift
         Constant <code>SPRING_PROFILE_K8S="k8s"</code> */
     String SPRING_PROFILE_K8S = "k8s";
+    
+    String SPRING_PROFILE_SWAGGER = "swagger";
 }
