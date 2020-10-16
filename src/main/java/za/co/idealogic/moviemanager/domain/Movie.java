@@ -61,7 +61,7 @@ public class Movie implements Serializable {
     @JsonIgnoreProperties(value = "movies", allowSetters = true)
     private Genre genre;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JsonIgnoreProperties(value = "movies", allowSetters = true)
     private Person director;
 

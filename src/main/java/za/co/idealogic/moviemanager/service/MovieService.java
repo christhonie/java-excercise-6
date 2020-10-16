@@ -1,12 +1,12 @@
 package za.co.idealogic.moviemanager.service;
 
 import za.co.idealogic.moviemanager.domain.Movie;
+import za.co.idealogic.moviemanager.domain.Person;
 import za.co.idealogic.moviemanager.repository.MovieRepository;
 import za.co.idealogic.moviemanager.service.dto.MovieDTO;
 import za.co.idealogic.moviemanager.service.mapper.MovieMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,10 +28,13 @@ public class MovieService {
     private final MovieRepository movieRepository;
 
     private final MovieMapper movieMapper;
+    
+    private final PersonService personService;
 
-    public MovieService(MovieRepository movieRepository, MovieMapper movieMapper) {
+    public MovieService(MovieRepository movieRepository, MovieMapper movieMapper, PersonService personService) {
         this.movieRepository = movieRepository;
         this.movieMapper = movieMapper;
+        this.personService = personService;
     }
 
     /**
@@ -43,6 +46,17 @@ public class MovieService {
     public MovieDTO save(MovieDTO movieDTO) {
         log.debug("Request to save Movie : {}", movieDTO);
         Movie movie = movieMapper.toEntity(movieDTO);
+        
+        //Director and/or the Actors with an ID will be added or updated automatically via the Mapper
+        //However, when Person.id is null, but Person.name is set we would like to consider these entries too.
+        //We will lookup the Person by that name. If found, use the existing Person. If not found we will create that Person.
+        
+        //Inspect the Director fields
+        if(movieDTO.getDirectorId() == null && movieDTO.getDirectorName() != null && !movieDTO.getDirectorName().isEmpty()) {
+        	Person newDirector = personService.lookupOrCreate(movieDTO.getDirectorName());
+        	movie.setDirector(newDirector);
+        }
+        
         movie = movieRepository.save(movie);
         return movieMapper.toDto(movie);
     }
@@ -98,8 +112,8 @@ public class MovieService {
     @Transactional(readOnly = true)
     public Optional<MovieDTO> findOne(Long id) {
         log.debug("Request to get Movie : {}", id);
-        return movieRepository.findOneWithEagerRelationships(id)
-            .map(movieMapper::toDto);
+        Optional<Movie> movie = movieRepository.findOneWithEagerRelationships(id);
+        return movie.map(movieMapper::toDto);
     }
 
 /*

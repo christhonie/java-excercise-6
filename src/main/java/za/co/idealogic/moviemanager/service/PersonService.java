@@ -81,4 +81,22 @@ public class PersonService {
         log.debug("Request to delete Person : {}", id);
         personRepository.deleteById(id);
     }
+    
+    
+    /**
+     * Lookup a person by name. If found, return that person. If not found create a new one.
+     * @param name The name of the person to lookup or create 
+     * @return Either a current or new {@link Person}
+     */
+    public Person lookupOrCreate(String name) {
+		return personRepository.findByName(name).orElse(new Person().name(name));
+    	
+//    	Optional<Person> result = personRepository.findByName(name);
+//    	
+//    	if(!result.isPresent()) {
+//    		Person newPerson = new Person().name(name);
+//    		return newPerson;
+//    	} else
+//    		return result.get();
+	}
 }
