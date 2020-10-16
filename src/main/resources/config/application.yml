@@ -101,3 +101,4 @@ swagger:
   contact-name: Christhonie Geldenhuys
   contact-email: development@idealogic.co.za
   use-default-response-messages: true
+  host: http://localhost:8080

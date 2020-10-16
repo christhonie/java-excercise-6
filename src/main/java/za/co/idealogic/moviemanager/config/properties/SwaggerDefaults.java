@@ -12,7 +12,7 @@ interface SwaggerDefaults {
     String license = null;
     String licenseUrl = null;
     String defaultIncludePattern = "/api/.*";
-    String host = null;
+    String host = "http://localhost:8080";
     String[] protocols = {};
     boolean useDefaultResponseMessages = true;
 } 
