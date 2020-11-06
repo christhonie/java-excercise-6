@@ -6,6 +6,7 @@ import za.co.idealogic.moviemanager.web.rest.util.HeaderUtil;
 import za.co.idealogic.moviemanager.web.rest.util.PaginationUtil;
 import za.co.idealogic.moviemanager.web.rest.util.ResponseUtil;
 import za.co.idealogic.moviemanager.service.dto.BookingDTO;
+import za.co.idealogic.moviemanager.service.dto.BookingSummaryDTO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,5 +122,20 @@ public class BookingResource {
         log.debug("REST request to delete Booking : {}", id);
         bookingService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    @GetMapping("/bookings/summary/{id}")
+    public ResponseEntity<BookingSummaryDTO> getBookingSummary(@PathVariable Long id) {
+        log.debug("REST request to get a Bookings summary");
+        ///Page<BookingDTO> page = bookingService.findAll(pageable);
+        
+        //STUFF
+        //Query - Get the data from the DB
+        //Map the Entity to the new BookingSummaryDTO
+        //Loop throught all the detail records too
+        
+        Optional<BookingSummaryDTO> bookingSummaryDTO = null;
+        return ResponseUtil.wrapOrNotFound(bookingSummaryDTO);
+    	
     }
 }
