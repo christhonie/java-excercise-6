@@ -7,9 +7,12 @@ import za.co.idealogic.moviemanager.service.dto.BookingDTO;
 import za.co.idealogic.moviemanager.service.dto.BookingSummaryDTO;
 import za.co.idealogic.moviemanager.service.dto.BookingSummaryMovieDetailsDTO;
 import za.co.idealogic.moviemanager.service.mapper.BookingMapper;
+import za.co.idealogic.moviemanager.service.mapper.BookingSummaryMapper;
+import za.co.idealogic.moviemanager.service.mapper.BookingSummaryMovieDetailsMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,12 @@ public class BookingService {
     private final BookingRepository bookingRepository;
 
     private final BookingMapper bookingMapper;
+    
+    @Autowired
+    private BookingSummaryMapper bookingSummaryMapper;
+    
+    @Autowired
+    private BookingSummaryMovieDetailsMapper bookingSummaryMovieDetailMapper;
 
     public BookingService(BookingRepository bookingRepository, BookingMapper bookingMapper) {
         this.bookingRepository = bookingRepository;
@@ -90,39 +99,6 @@ public class BookingService {
     public Optional<BookingSummaryDTO> findBookingSummary(Long id) {
         log.debug("Request to get Booking : {}", id);
 
-        //Query - Get the data from the DB
-        Optional<Booking> optionalBooking = bookingRepository.findById(id);
-        
-        if(optionalBooking.isPresent()) {
-            //Map the Entity to the new BookingSummaryDTO
-        	final BookingSummaryDTO bookingSummaryDTO = new BookingSummaryDTO();
-        	final Booking booking = optionalBooking.get();
-
-        	bookingSummaryDTO.setCustomer(booking.getCustomer());
-        	bookingSummaryDTO.setPaymentType(booking.getPaymentType());
-        	bookingSummaryDTO.setReferenceNumber(booking.getReferenceNumber());
-        	
-            //Loop through all the detail records
-        	List<BookingSummaryMovieDetailsDTO> movies = new ArrayList<>();
-
-        	//Stuff to set each item in the list
-        	for(Reservation reservation : booking.getReservations()) {
-        		BookingSummaryMovieDetailsDTO detail = new BookingSummaryMovieDetailsDTO();
-        		detail.setCinemaName(reservation.getScreening().getCinema().getName());
-        		detail.setMovieName(reservation.getScreening().getMovie().getName());
-        		detail.setStartTime(reservation.getScreening().getStartTime());
-        		detail.setVenueName(reservation.getScreening().getCinema().getVenue().getName());
-        		detail.setSeatNumber(reservation.getSeat().getNumber());
-        		
-        		movies.add(detail);
-        	}
-        	
-        	bookingSummaryDTO.setMovies(movies);
-        	
-        	return Optional.of(bookingSummaryDTO);  	
-        	
-        } else {
-        	return Optional.empty();
-        }
+        return bookingRepository.findById(id).map(bookingSummaryMapper::toDto);
     }
 }

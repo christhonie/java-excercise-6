@@ -2,26 +2,18 @@ package za.co.idealogic.moviemanager.service.mapper;
 
 
 import za.co.idealogic.moviemanager.domain.*;
-import za.co.idealogic.moviemanager.service.dto.BookingDTO;
+import za.co.idealogic.moviemanager.service.dto.BookingSummaryDTO;
 
 import org.mapstruct.*;
 
 /**
- * Mapper for the entity {@link Booking} and its DTO {@link BookingDTO}.
+ * Mapper for the entity {@link Booking} and the UI specific DTO {@link BookingSummaryDTO}.
  */
-@Mapper(componentModel = "spring", uses = {})
-public interface BookingSummaryMapper extends EntityMapper<BookingDTO, Booking> {
+@Mapper(componentModel = "spring", uses = {BookingSummaryMovieDetailsMapper.class})
+public interface BookingSummaryMapper {
 
-    @Mapping(source = "", target = "")
-	BookingDTO toDto(Booking entity);
+	@Mapping(source = "reservations", target = "movies")
+    BookingSummaryDTO toDto(Booking entity);
 
-	//We do not need this. Why??
-    default Booking fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        Booking booking = new Booking();
-        booking.setId(id);
-        return booking;
-    }
+
 }

@@ -3,12 +3,15 @@ package za.co.idealogic.moviemanager.service.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import za.co.idealogic.moviemanager.domain.enumeration.PaymentType;
 
 /**
  * A DTO for the {@link za.co.idealogic.moviemanager.domain.Booking} summary screen. 
  * Only show those fields of importance on that screen.
  */
+@JsonPropertyOrder({"referenceNumber", "customer"})
 public class BookingSummaryDTO implements Serializable {
     
 	private static final long serialVersionUID = -720388265384418796L;

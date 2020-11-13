@@ -2,6 +2,9 @@ package za.co.idealogic.moviemanager.service.dto;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"startTime", "movieName", "venueName", "cinemaName"})
 public class BookingSummaryMovieDetailsDTO {
 
 	private String movieName;
