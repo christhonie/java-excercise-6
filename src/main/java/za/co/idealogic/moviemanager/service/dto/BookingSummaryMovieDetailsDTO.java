@@ -8,7 +8,7 @@ public class BookingSummaryMovieDetailsDTO {
 	private String venueName;
 	private String cinemaName;
 	private Instant startTime;
-	private Integer quantity;
+	private String seatNumber;
 
 	public String getMovieName() {
 		return movieName;
@@ -34,11 +34,11 @@ public class BookingSummaryMovieDetailsDTO {
 	public void setStartTime(Instant startTime) {
 		this.startTime = startTime;
 	}
-	public Integer getQuantity() {
-		return quantity;
+	public String getSeatNumber() {
+		return seatNumber;
 	}
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
+	public void setSeatNumber(String seatNumber) {
+		this.seatNumber = seatNumber;
 	}
 	
 	

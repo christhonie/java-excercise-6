@@ -118,12 +118,6 @@
             <artifactId>mapstruct</artifactId>
 			<version>${mapstruct.version}</version>            
         </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-            <scope>provided</scope>
-			<version>${mapstruct.version}</version>            
-        </dependency>
 		<dependency>
 		    <groupId>io.springfox</groupId>
 		    <artifactId>springfox-boot-starter</artifactId>

@@ -1,8 +1,11 @@
 package za.co.idealogic.moviemanager.service;
 
 import za.co.idealogic.moviemanager.domain.Booking;
+import za.co.idealogic.moviemanager.domain.Reservation;
 import za.co.idealogic.moviemanager.repository.BookingRepository;
 import za.co.idealogic.moviemanager.service.dto.BookingDTO;
+import za.co.idealogic.moviemanager.service.dto.BookingSummaryDTO;
+import za.co.idealogic.moviemanager.service.dto.BookingSummaryMovieDetailsDTO;
 import za.co.idealogic.moviemanager.service.mapper.BookingMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -80,5 +85,44 @@ public class BookingService {
     public void delete(Long id) {
         log.debug("Request to delete Booking : {}", id);
         bookingRepository.deleteById(id);
+    }
+    
+    public Optional<BookingSummaryDTO> findBookingSummary(Long id) {
+        log.debug("Request to get Booking : {}", id);
+
+        //Query - Get the data from the DB
+        Optional<Booking> optionalBooking = bookingRepository.findById(id);
+        
+        if(optionalBooking.isPresent()) {
+            //Map the Entity to the new BookingSummaryDTO
+        	final BookingSummaryDTO bookingSummaryDTO = new BookingSummaryDTO();
+        	final Booking booking = optionalBooking.get();
+
+        	bookingSummaryDTO.setCustomer(booking.getCustomer());
+        	bookingSummaryDTO.setPaymentType(booking.getPaymentType());
+        	bookingSummaryDTO.setReferenceNumber(booking.getReferenceNumber());
+        	
+            //Loop through all the detail records
+        	List<BookingSummaryMovieDetailsDTO> movies = new ArrayList<>();
+
+        	//Stuff to set each item in the list
+        	for(Reservation reservation : booking.getReservations()) {
+        		BookingSummaryMovieDetailsDTO detail = new BookingSummaryMovieDetailsDTO();
+        		detail.setCinemaName(reservation.getScreening().getCinema().getName());
+        		detail.setMovieName(reservation.getScreening().getMovie().getName());
+        		detail.setStartTime(reservation.getScreening().getStartTime());
+        		detail.setVenueName(reservation.getScreening().getCinema().getVenue().getName());
+        		detail.setSeatNumber(reservation.getSeat().getNumber());
+        		
+        		movies.add(detail);
+        	}
+        	
+        	bookingSummaryDTO.setMovies(movies);
+        	
+        	return Optional.of(bookingSummaryDTO);  	
+        	
+        } else {
+        	return Optional.empty();
+        }
     }
 }

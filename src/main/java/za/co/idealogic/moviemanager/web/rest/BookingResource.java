@@ -127,14 +127,8 @@ public class BookingResource {
     @GetMapping("/bookings/summary/{id}")
     public ResponseEntity<BookingSummaryDTO> getBookingSummary(@PathVariable Long id) {
         log.debug("REST request to get a Bookings summary");
-        ///Page<BookingDTO> page = bookingService.findAll(pageable);
         
-        //STUFF
-        //Query - Get the data from the DB
-        //Map the Entity to the new BookingSummaryDTO
-        //Loop throught all the detail records too
-        
-        Optional<BookingSummaryDTO> bookingSummaryDTO = null;
+        Optional<BookingSummaryDTO> bookingSummaryDTO = bookingService.findBookingSummary(id);
         return ResponseUtil.wrapOrNotFound(bookingSummaryDTO);
     	
     }
